@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人生のアニメ日記</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- サイト共通ヘッダー -->
+    <header>
+        <h1>人生のアニメ日記</h1>
+        <p>あの日観たアニメが、人生の1ページになる。</p>
+        <nav class="navbar">
+            <button class="nav-button active" data-page="home">
+                ホーム
+            </button>
+            <button class="nav-button" data-page="library">
+                アニメ一覧
+            </button>
+            <button class="nav-button" data-page="mypage">
+                マイページ
+            </button>
+        </nav>
+    </header>
+
+
+    <main>
+
+        <!-- ホーム画面 -->
+        <section id="page-home" class="page active">
+
+            <div class="home-hero">
+                <h2>アニメの記憶を、未来へ。</h2>
+                <p>
+                    あの日観た作品も、忘れられない感動も。
+                    あなたのアニメ人生を記録しよう。
+                </p>
+
+                <button onclick="switchPage('library')">
+                    アニメ一覧を見る
+                </button>
+            </div>
+
+        </section>
+
+        <!-- アニメ一覧画面 -->
+        <section id="page-library" class="page">
+
+            <section class="add-anime">
+                <h2>新しいアニメを追加</h2>
+
+                <form id="anime-form">
+
+                    <input type="text" id="anime-title" list="anime-suggestions" placeholder="アニメのタイトルを入力"
+                        autocomplete="off" required>
+
+                    <datalist id="anime-suggestions"></datalist>
+
+
+
+
+
+                    <!-- 第26回：新規登録の複数ジャンル選択 -->
+                    <fieldset class="genre-picker" id="new-anime-genres">
+                        <legend>ジャンルを選択（複数可）</legend>
+
+                        <label><input type="checkbox" value="恋愛">恋愛</label>
+                        <label><input type="checkbox" value="青春">青春</label>
+                        <label><input type="checkbox" value="日常">日常</label>
+                        <label><input type="checkbox" value="アクション">アクション</label>
+                        <label><input type="checkbox" value="ファンタジー">ファンタジー</label>
+                        <label><input type="checkbox" value="SF">SF</label>
+                        <label><input type="checkbox" value="ミステリー">ミステリー</label>
+                        <label><input type="checkbox" value="コメディ">コメディ</label>
+                        <label><input type="checkbox" value="音楽">音楽</label>
+                        <label><input type="checkbox" value="スポーツ">スポーツ</label>
+                        <label><input type="checkbox" value="その他">その他</label>
+                    </fieldset>
+
+
+                    <button type="submit">
+                        アニメを登録
+                    </button>
+                </form>
+                <!-- 第19回：外部APIによるアニメ検索 -->
+                <div class="api-search-section">
+
+                    <h3>アニメ作品データベースで検索</h3>
+
+                    <p>作品名を検索して、登録するアニメを選ぼう！</p>
+
+                    <div class="api-search-controls">
+                        <input type="text" id="api-search-input" placeholder="アニメのタイトルを入力">
+
+                        <button type="button" id="api-search-button">
+                            検索
+                        </button>
+                    </div>
+
+                    <p id="api-search-message"></p>
+
+                    <div id="api-search-results"></div>
+
+                </div>
+            </section>
+
+            <section class="search-section">
+                <h2>アニメを検索</h2>
+
+                <input type="text" id="search-input" placeholder="アニメのタイトルを入力...">
+
+                <div class="filter-buttons">
+                    <button class="filter-button active" data-status="すべて">
+                        すべて
+                    </button>
+
+                    <button class="filter-button" data-status="視聴済み">
+                        視聴済み
+                    </button>
+
+                    <button class="filter-button" data-status="視聴中">
+                        視聴中
+                    </button>
+
+                    <button class="filter-button" data-status="視聴予定">
+                        視聴予定
+                    </button>
+                </div>
+            </section>
+
+            <h2>マイアニメライブラリ</h2>
+            <!-- お気に入りだけを表示するボタン -->
+            <div class="favorite-filter-area">
+                <button id="favorite-filter-button" type="button" onclick="toggleFavoriteFilter()">
+                    ♡ お気に入りのみ表示
+                </button>
+            </div>
+
+
+            <!-- 第14回：アニメの並び替え -->
+            <div class="sort-section">
+                <label for="sort-select">並び替え：</label>
+
+                <select id="sort-select">
+                    <option value="default">登録順</option>
+                    <option value="title">タイトル順</option>
+                    <option value="rating">評価が高い順</option>
+                    <option value="date">視聴日が新しい順</option>
+                </select>
+            </div>
+
+            <!-- 第15回：ジャンル別フィルター -->
+            <div class="genre-filter-section">
+                <label for="genre-filter">ジャンル：</label>
+
+                <select id="genre-filter">
+                    <option value="すべて">すべてのジャンル</option>
+                    <option value="未設定">未設定</option>
+                    <option value="恋愛">恋愛</option>
+                    <option value="青春">青春</option>
+                    <option value="日常">日常</option>
+                    <option value="アクション">アクション</option>
+                    <option value="ファンタジー">ファンタジー</option>
+                    <option value="SF">SF</option>
+                    <option value="ミステリー">ミステリー</option>
+                    <option value="コメディ">コメディ</option>
+                    <option value="音楽">音楽</option>
+                    <option value="スポーツ">スポーツ</option>
+                    <option value="その他">その他</option>
+                </select>
+            </div>
+
+            <p id="anime-count"></p>
+
+            <div class="anime-container" id="anime-container"></div>
+
+            <!-- 詳細画面 -->
+            <div id="detail-panel" class="detail-panel">
+
+                <button onclick="closeDetail()">閉じる ✕</button>
+
+                <h2 id="detail-title">作品タイトル</h2>
+                <p id="detail-status">視聴済み</p>
+
+                <!-- 第21回：放送年 -->
+                <p id="detail-year">放送年：未設定</p>
+
+
+                <h3>あなたの評価</h3>
+
+                <div class="rating-buttons">
+                    <button onclick="setRating(1)">★</button>
+                    <button onclick="setRating(2)">★</button>
+                    <button onclick="setRating(3)">★</button>
+                    <button onclick="setRating(4)">★</button>
+                    <button onclick="setRating(5)">★</button>
+                </div>
+
+                <p id="rating-result">まだ評価されていません</p>
+
+                <!-- お気に入り登録 -->
+                <div class="favorite-area">
+                    <button id="favorite-button" type="button" onclick="toggleFavorite()">
+                        ♡ お気に入りに登録
+                    </button>
+                </div>
+
+                <!-- 視聴日の記録 -->
+                <div class="diary-field">
+                    <label for="watch-date">視聴日</label>
+                    <input type="date" id="watch-date">
+
+                    <!-- 第16回：視聴進捗 -->
+                    <div class="diary-field">
+                        <label for="watched-episodes">視聴した話数</label>
+                        <input type="number" id="watched-episodes" min="0" value="0">
+
+                        <label for="total-episodes">全話数</label>
+                        <input type="number" id="total-episodes" min="0" value="0">
+
+                        <p id="episode-progress-text">進捗：未設定</p>
+
+                        <div class="progress-track">
+                            <div id="episode-progress-bar"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 感想・思い出 -->
+                <div class="diary-field">
+                    <label for="anime-memo">感想・思い出</label>
+                    <textarea id="anime-memo" rows="5" placeholder="この作品を観て感じたことを書こう..."></textarea>
+                </div>
+
+                <button type="button" id="save-diary-button" onclick="saveDiary()">
+                    日記を保存
+                </button>
+
+                <p id="diary-message"></p>
+
+                <!-- 作品情報の編集 -->
+                <div class="edit-anime-section">
+                    <h3>作品情報を編集</h3>
+
+                    <label for="edit-anime-title">作品タイトル</label>
+                    <input type="text" id="edit-anime-title">
+
+                    <!-- 登録済み作品のジャンルを編集 -->
+                    <label for="edit-anime-genre">ジャンル</label>
+
+
+                    <!-- 第26回：登録済み作品の複数ジャンル編集 -->
+                    <fieldset class="genre-picker" id="edit-anime-genres">
+                        <legend>ジャンルを編集（複数可）</legend>
+
+                        <label><input type="checkbox" value="恋愛">恋愛</label>
+                        <label><input type="checkbox" value="青春">青春</label>
+                        <label><input type="checkbox" value="日常">日常</label>
+                        <label><input type="checkbox" value="アクション">アクション</label>
+                        <label><input type="checkbox" value="ファンタジー">ファンタジー</label>
+                        <label><input type="checkbox" value="SF">SF</label>
+                        <label><input type="checkbox" value="ミステリー">ミステリー</label>
+                        <label><input type="checkbox" value="コメディ">コメディ</label>
+                        <label><input type="checkbox" value="音楽">音楽</label>
+                        <label><input type="checkbox" value="スポーツ">スポーツ</label>
+                        <label><input type="checkbox" value="その他">その他</label>
+                    </fieldset>
+
+
+
+                    <label for="edit-anime-image">画像のパス</label>
+                    <input type="text" id="edit-anime-image" placeholder="images/anime.jpg">
+
+                    <!-- パソコンから画像を選択 -->
+                    <label for="image-file">画像ファイルを選択</label>
+
+                    <input type="file" id="image-file" accept="image/jpeg,image/png,image/webp">
+
+                    <p id="image-message"></p>
+
+
+                    <button type="button" onclick="saveAnimeEdit()">
+                        変更を保存
+                    </button>
+
+                    <p id="edit-anime-message"></p>
+                </div>
+
+
+            </div>
+
+        </section>
+
+        <!-- マイページ画面 -->
+        <section id="page-mypage" class="page">
+
+            <section class="dashboard">
+
+                <h2>マイダッシュボード</h2>
+                <p>あなたのアニメ人生を振り返ろう。</p>
+
+                <div class="stats-container">
+
+                    <div class="stat-card">
+                        <h3>登録作品数</h3>
+                        <p id="total-count">0</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <h3>視聴済み</h3>
+                        <p id="completed-count">0</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <h3>視聴中</h3>
+                        <p id="watching-count">0</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <h3>視聴予定</h3>
+                        <p id="planned-count">0</p>
+                    </div>
+
+                </div>
+
+                <div class="average-card">
+                    <h3>平均評価</h3>
+                    <p id="average-rating">未評価</p>
+                </div>
+
+                <div class="ranking-card">
+                    <h3>お気に入りランキング</h3>
+                    <ol id="ranking-list"></ol>
+                </div>
+                <!-- 第25回：ジャンル分析 -->
+                <section class="genre-analytics">
+                    <div class="genre-analytics-header">
+                        <h2>ジャンル分析</h2>
+                        <p>登録したアニメのジャンル別統計</p>
+                    </div>
+
+                    <div class="genre-summary">
+                        <div>
+                            <span>登録ジャンル数</span>
+                            <strong id="genre-count">0</strong>
+                        </div>
+
+                        <div>
+                            <span>最多ジャンル</span>
+                            <strong id="top-genre">未登録</strong>
+                        </div>
+                    </div>
+
+                    <div id="genre-chart"></div>
+                </section>
+
+                <!-- 第17回：データのバックアップ・復元 -->
+                <div class="backup-section">
+
+                    <h2>データ管理・バックアップ</h2>
+
+                    <p>
+                        大切なアニメの記録を保存・復元できます。
+                    </p>
+
+                    <div class="backup-box">
+                        <h3>バックアップを作成</h3>
+
+                        <p>現在のアニメ記録をファイルに保存します。</p>
+
+                        <button type="button" id="export-button">
+                            バックアップをダウンロード
+                        </button>
+                    </div>
+
+                    <div class="backup-box">
+                        <h3>バックアップから復元</h3>
+
+                        <p>
+                            保存したJSONファイルを選んで復元します。
+                            現在のデータは上書きされます。
+                        </p>
+
+                        <input type="file" id="import-file" accept=".json,application/json">
+
+                        <button type="button" id="import-button">
+                            データを復元
+                        </button>
+
+
+
+                    </div>
+
+                    <p id="backup-message"></p>
+
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- JavaScriptの読み込み -->
+    <script src="script.js"></script>
+</body>
+
+</html>
